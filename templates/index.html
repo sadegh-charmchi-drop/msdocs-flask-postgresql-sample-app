@@ -41,14 +41,14 @@
   </style>
 {% endblock %}
 {% block content %}
-      <h1>Restaurants</h1>
+      <h1>Sale Orders</h1>
 
       {% if True %}
           <table class="table">
               <thead>
                   <tr>
-                      <th>Name</th>
-                      <th>Rating</th>
+                      <th>Order Name</th>
+                      <th>date</th>
                       <th class="text-end">Details</th>
                   </tr>
               </thead>
@@ -67,6 +67,6 @@
       {% endif %}
 
       <div class="d-flex justify-content-end">
-              <a href="{{ url_for('create_restaurant') }}" class="btn btn-success px-4 gap-3">Add new restaurant</a>
+              <a href="{{ url_for('create_restaurant') }}" class="btn btn-success px-4 gap-3">Add new sale order</a>
       </div>
 {% endblock %}
