@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Restaurant List{% endblock %}
+{% block title %}Sale Order List{% endblock %}
 {% block head %}
     {{ super() }}
     <style>
@@ -47,26 +47,27 @@
           <table class="table">
               <thead>
                   <tr>
-                      <th>Order Name</th>
-                      <th>date</th>
+                      <th>Order Number</th>
+                      <th>Order Date</th>
                       <th class="text-end">Details</th>
                   </tr>
               </thead>
               <tbody>
-                  {% for restaurant in restaurants %}
+                  {% for saleorder in saleorders %}
                       <tr>
-                          <td>{{ restaurant.name }}</td>
-                          <td>{% include "star_rating.html" %}</td>
-                          <td class="text-end"><a href="{{ url_for('details', id=restaurant.id) }}" class="btn btn-sm btn-primary">Details</a></td>
+                          <td>{{ saleorder.order_number }}</td>
+                          <td>{{ saleorder.order_date }}</td>
+                          <!-- <td>{% include "star_rating.html" %}</td> -->
+                          <td class="text-end"><a href="{{ url_for('details', id=saleorder.id) }}" class="btn btn-sm btn-primary">Details</a></td>
                       </tr>
                   {% endfor %}
               </tbody>
           </table>
       {% else %}
-          <p>No restaurants exist.  Select Add new restaurant to add one.</p>
+          <p>No sale order exist.  Select Add new sale order to add one.</p>
       {% endif %}
 
       <div class="d-flex justify-content-end">
-              <a href="{{ url_for('create_restaurant') }}" class="btn btn-success px-4 gap-3">Add new sale order</a>
+              <a href="{{ url_for('create_saleorder') }}" class="btn btn-success px-4 gap-3">Add new sale order</a>
       </div>
 {% endblock %}

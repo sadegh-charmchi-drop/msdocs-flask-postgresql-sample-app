@@ -32,67 +32,71 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # The import must be done after db initialization due to circular import issue
-from models import Restaurant, Review
+from models import SaleOrder, SaleOrderItem
 
 @app.route('/', methods=['GET'])
 def index():
     print('Request for index page received')
-    restaurants = Restaurant.query.all()
-    return render_template('index.html', restaurants=restaurants)
+    saleorders = SaleOrder.query.all()
+    return render_template('index.html', saleorders=saleorders)
 
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
-    restaurant = Restaurant.query.where(Restaurant.id == id).first()
-    reviews = Review.query.where(Review.restaurant == id)
-    return render_template('details.html', restaurant=restaurant, reviews=reviews)
+    saleorder = SaleOrder.query.where(SaleOrder.id == id).first()
+    saleorderitems = SaleOrderItem.query.where(SaleOrderItem.saleorder == id)
+    return render_template('details.html', saleorder=saleorder, saleorderitems=saleorderitems)
 
 @app.route('/create', methods=['GET'])
-def create_restaurant():
-    print('Request for add restaurant page received')
-    return render_template('create_restaurant.html')
+def create_saleorder():
+    print('Request for add saleorder page received')
+    return render_template('create_saleorder.html')
 
 @app.route('/add', methods=['POST'])
 @csrf.exempt
-def add_restaurant():
+def add_saleorder():
     try:
-        name = request.values.get('restaurant_name')
-        street_address = request.values.get('street_address')
-        description = request.values.get('description')
+        order_number = request.values.get('order_number')
+        customer = request.values.get('customer')
+        order_date = request.values.get('order_date')
+        total_amount = request.values.get('total_amount')
     except (KeyError):
         # Redisplay the question voting form.
-        return render_template('add_restaurant.html', {
-            'error_message': "You must include a restaurant name, address, and description",
+        return render_template('add_saleorder.html', {
+            'error_message': "You must include a saleorder order_number, customer, order_date and total_amount",
         })
     else:
-        restaurant = Restaurant()
-        restaurant.name = name
-        restaurant.street_address = street_address
-        restaurant.description = description
-        db.session.add(restaurant)
+        saleorder = SaleOrder()
+        saleorder.order_number = order_number
+        saleorder.customer = customer
+        saleorder.order_date = order_date
+        saleorder.total_amount = total_amount
+        db.session.add(saleorder)
         db.session.commit()
 
-        return redirect(url_for('details', id=restaurant.id))
+        return redirect(url_for('details', id=saleorder.id))
 
-@app.route('/review/<int:id>', methods=['POST'])
+@app.route('/saleorderitem/<int:id>', methods=['POST'])
 @csrf.exempt
-def add_review(id):
+def add_saleorderitem(id):
     try:
-        user_name = request.values.get('user_name')
-        rating = request.values.get('rating')
-        review_text = request.values.get('review_text')
+        product = request.values.get('product')
+        quantity = request.values.get('quantity')
+        item_description = request.values.get('item_description')
+        subtotal = request.values.get('subtotal')
     except (KeyError):
         #Redisplay the question voting form.
-        return render_template('add_review.html', {
-            'error_message': "Error adding review",
+        return render_template('add_saleorderitem.html', {
+            'error_message': "Error adding saleorder item",
         })
     else:
-        review = Review()
-        review.restaurant = id
-        review.review_date = datetime.now()
-        review.user_name = user_name
-        review.rating = int(rating)
-        review.review_text = review_text
-        db.session.add(review)
+        saleorderitem = SaleOrderItem()
+        saleorderitem.saleorder = id
+        saleorderitem.creation_date = datetime.now()
+        saleorderitem.product = product
+        saleorderitem.quantity = int(quantity)
+        saleorderitem.item_description = item_description
+        saleorderitem.subtotal = float(subtotal)
+        db.session.add(saleorderitem)
         db.session.commit()
 
     return redirect(url_for('details', id=id))
@@ -100,17 +104,17 @@ def add_review(id):
 @app.context_processor
 def utility_processor():
     def star_rating(id):
-        reviews = Review.query.where(Review.restaurant == id)
+        saleorderitems = SaleOrderItem.query.where(SaleOrderItem.saleorder == id)
 
-        ratings = []
-        review_count = 0
-        for review in reviews:
-            ratings += [review.rating]
-            review_count += 1
+        quantities = []
+        salorderitem_count = 0
+        for item in saleorderitems:
+            quantities += [item.quantity]
+            salorderitem_count += 1
 
-        avg_rating = sum(ratings) / len(ratings) if ratings else 0
-        stars_percent = round((avg_rating / 5.0) * 100) if review_count > 0 else 0
-        return {'avg_rating': avg_rating, 'review_count': review_count, 'stars_percent': stars_percent}
+        avg_quantity = sum(quantities) / len(quantities) if quantities else 0
+        stars_percent = round((avg_quantity / 5.0) * 100) if salorderitem_count > 0 else 0
+        return {'avg_quantity': avg_quantity, 'saleorderitem_count': salorderitem_count, 'stars_percent': stars_percent}
 
     return dict(star_rating=star_rating)
 

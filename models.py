@@ -1,32 +1,34 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Double
 from sqlalchemy.orm import validates
 
 from app import db
 
 
-class Restaurant(db.Model):
-    __tablename__ = 'restaurant'
+class SaleOrder(db.Model):
+    __tablename__ = 'saleorder'
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    street_address = Column(String(50))
-    description = Column(String(250))
+    order_number = Column(String(50))
+    customer = Column(String(50))
+    order_date = Column(DateTime)
+    total_amount = Column(Double)
 
     def __str__(self):
-        return self.name
+        return self.ordernumber
 
-class Review(db.Model):
-    __tablename__ = 'review'
+class SaleOrderItem(db.Model):
+    __tablename__ = 'saleorderitem'
     id = Column(Integer, primary_key=True)
-    restaurant = Column(Integer, ForeignKey('restaurant.id', ondelete="CASCADE"))
-    user_name = Column(String(30))
-    rating = Column(Integer)
-    review_text = Column(String(500))
-    review_date = Column(DateTime)
+    saleorder = Column(Integer, ForeignKey('saleorder.id', ondelete="CASCADE"))
+    product = Column(String(30))
+    quantity = Column(Integer)
+    item_description = Column(String(500))
+    creation_date = Column(DateTime)
+    subtotal = Column(Double)
 
     @validates('rating')
-    def validate_rating(self, key, value):
-        assert value is None or (1 <= value <= 5)
+    def validate_quantity(self, key, value):
+        assert value is None or (1 <= value <= 10)
         return value
 
     def __str__(self):
-        return f"{self.user_name}: {self.review_date:%x}"
+        return f"{self.product}: {self.creation_date:%x}"

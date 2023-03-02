@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Sale Order Create{% endblock %}
+{% block head %}
+    {{ super() }}
+    <style>
+      body {
+          min-height: 75rem;
+          padding-top: 4.5rem;
+      }
+  </style>
+{% endblock %}
+{% block content %}
+    <h1>Add New Sale Order</h1>
+
+    <form method="POST" action="{{ url_for('add_saleorder') }}">
+        <div class="mb-3">
+          <label for="order_number" class="form-label">Sale Order Number</label>
+          <input type="text" class="form-control" id="order_number" name="order_number">
+        </div>
+        <div class="mb-3">
+          <label for="customer" class="form-label">Customer</label>
+          <input type="text" class="form-control" id="customer" name="customer">
+        </div>
+        <div class="mb-3">
+            <label for="order_date" class="form-label">Order date</label>
+            <input type="text" class="form-control" id="order_date" name="order_date">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="cancel" class="btn btn-primary">Cancel</button>
+    </form>
+{% endblock %}
+    

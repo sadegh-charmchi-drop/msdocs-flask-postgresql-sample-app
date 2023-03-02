@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Restaurant Details{% endblock %}
+{% block title %}Sale Order Details{% endblock %}
 {% block head %}
     {{ super() }}
     <style>
@@ -10,98 +10,104 @@
   </style>
 {% endblock %}
 {% block content %}
-  <h1>{{ restaurant.name }}</h1> 
+  <h1>{{ saleorder.name }}</h1> 
   <div class="row">
-      <div class="col-md-2 fw-bold">Street address:</div>
-      <div class="col">{{ restaurant.street_address }}</div>
+      <div class="col-md-2 fw-bold">Order Number:</div>
+      <div class="col">{{ saleorder.order_number }}</div>
   </div>
   <div class="row">
-      <div class="col-md-2 fw-bold">Description:</div>
-      <div class="col">{{ restaurant.description }}</div>                
+      <div class="col-md-2 fw-bold">Customer:</div>
+      <div class="col">{{ saleorder.customer }}</div>                
   </div>
   <div class="row">
-      <div class="col-md-2 fw-bold">Rating:</div>
-      <div class="col"></div>                
+      <div class="col-md-2 fw-bold">Order Date:</div>
+      <div class="col">{{ saleorder.order_date }}</div>
   </div>
 
-  <h4 class="mt-5">Reviews</h4>
+  <h4 class="mt-5">Sale Order Items</h4>
 
   <p>
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addReviewModal">
-          Add new review
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addItemModal">
+          Add new item
       </button>
   </p>
 
 <!-- Button trigger modal -->
-    {% if reviews %}
+    {% if saleorderitems %}
         <table class="table">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>User</th>
-                    <th>Rating</th>
-                    <th>Review</th>
+                    <th>Creation Date</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Item Description</th>
+                    <th>Subtotal</th>
                 </tr>
             </thead>
             <tbody>
-                {% for review in reviews %}
+                {% for saleorderitem in saleorderitems %}
                     <tr>
-                        <td>{{ review.review_date }}</td>
-                        <td>{{ review.user_name }}</td>
-                        <td>{{ review.rating }}</td>
-                        <td>{{ review.review_text }}</td>
+                        <td>{{ saleorderitem.creation_date }}</td>
+                        <td>{{ saleorderitem.product }}</td>
+                        <td>{{ saleorderitem.quantity }}</td>
+                        <td>{{ saleorderitem.item_description }}</td>
+                        <td>{{ saleorderitem.subtotal }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p>No reviews of this restaurant yet.</p>
+        <p>No saleorderitem of this saleorder yet.</p>
     {% endif %}
 
     <!-- Modal -->
-    <div class="modal fade" id="addReviewModal" tabindex="-1" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addReviewModalLabel">Add Review</h5>
+            <h5 class="modal-title" id="addItemModalLabel">Add Sale Order Item</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-              <form method="POST" action="{{ url_for('add_review', id=restaurant.id) }}">
+              <form method="POST" action="{{ url_for('add_saleorderitem', id=saleorder.id) }}">
 
               <div class="modal-body">
 
                 <div class="mb-3">                        
-                    <label for="user_name" class="form-label fw-bold">Your name</label>
-                    <input type="text" class="form-control" id="user_name" name="user_name">
+                    <label for="product" class="form-label fw-bold">Product</label>
+                    <input type="text" class="form-control" id="product" name="product">
                   </div>
                   <div class="mb-3">
-                    <label class="form-label fw-bold">Rating</label>
+                    <label class="form-label fw-bold">Quantity</label>
 
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="rating" id="rating1" value="1">
-                        <label class="form-check-label" for="rating1">1</label>
+                        <input class="form-check-input" type="radio" name="quantity" id="quantity1" value="1">
+                        <label class="form-check-label" for="quantity1">1</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="rating" id="rating2" value="2">
-                        <label class="form-check-label" for="rating2">2</label>
+                        <input class="form-check-input" type="radio" name="quantity" id="quantity2" value="2">
+                        <label class="form-check-label" for="quantity2">2</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="rating" id="rating3" value="3">
-                        <label class="form-check-label" for="rating3">3</label>
+                        <input class="form-check-input" type="radio" name="quantity" id="quantity3" value="3">
+                        <label class="form-check-label" for="quantity3">3</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="rating" id="rating4" value="4">
-                        <label class="form-check-label" for="rating3">4</label>
+                        <input class="form-check-input" type="radio" name="quantity" id="quantity4" value="4">
+                        <label class="form-check-label" for="quantity4">4</label>
                       </div>
                       <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
-                        <label class="form-check-label" for="rating3">5</label>
+                        <input class="form-check-input" type="radio" name="quantity" id="quantity5" value="5">
+                        <label class="form-check-label" for="quantity5">5</label>
                       </div>
                   </div>
                   <div class="mb-3">
-                      <label for="review_text" class="form-label fw-bold">Comments</label>
-                      <input type="text" class="form-control" id="review_text" name="review_text">
+                      <label for="item_description" class="form-label fw-bold">Item Description</label>
+                      <input type="text" class="form-control" id="item_description" name="item_description">
                   </div>
+                  <div class="mb-3">
+                    <label for="subtotal" class="form-label fw-bold">Subtotal</label>
+                    <input type="text" class="form-control" id="subtotal" name="subtotal">
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
